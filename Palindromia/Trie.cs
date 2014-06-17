@@ -10,14 +10,14 @@ namespace Palindromia
 		where T : IEnumerable<Tel>
 	{
 		int count = 0;
-		Node<Tel> root = new Node<Tel>();
+		Node root = new Node();
 		readonly IConcatable<T, Tel> concat;
 
 		public Trie(IConcatable<T, Tel> concat) {
 			this.concat = concat;
 		}
 
-		Node<Tel> Find(T item) {
+		Node Find(T item) {
 			var search = root;
 			foreach (var el in item)
 				search = search[el];
@@ -49,7 +49,7 @@ namespace Palindromia
 		}
 
 		public void Clear() {
-			this.root = new Node<Tel>();
+			this.root = new Node();
 			this.count = 0;
 		}
 
@@ -62,7 +62,7 @@ namespace Palindromia
 		}
 
 		public IEnumerator<T> GetEnumerator() {
-			var search = new Queue<Node<Tel>>(new [] { this.root });
+			var search = new Queue<Node>(new [] { this.root });
 			while (search.Any()) {
 				var toSearch = search.Dequeue();
 				if (toSearch.Included)
@@ -124,31 +124,31 @@ namespace Palindromia
 			throw new NotImplementedException();
 		}
 
-		class Node<Tel>
+		class Node
 		{
-			Dictionary<Tel, Node<Tel>> children = new Dictionary<Tel, Node<Tel>>();
-			Node<Tel> parent;
+			Dictionary<Tel, Node> children = new Dictionary<Tel, Node>();
+			Node parent;
 
 			public Node()
 				: this(null) {
 			}
 
-			Node(Node<Tel> parent) {
+			Node(Node parent) {
 				this.parent = parent;
 			}
 
-			public Node<Tel> this[Tel u] {
+			public Node this[Tel u] {
 				get {
-					Node<Tel> child;
+					Node child;
 					if (!children.TryGetValue(u, out child)) {
-						child = new Node<Tel>(this);
+						child = new Node(this);
 						children[u] = child;
 					}
 					return child;
 				}
 			}
 
-			public IEnumerable<KeyValuePair<Tel, Node<Tel>>> Children {
+			public IEnumerable<KeyValuePair<Tel, Node>> Children {
 				get {
 					return this.children;
 				}
