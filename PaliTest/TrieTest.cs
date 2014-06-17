@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Palindromia;
 
@@ -80,6 +81,85 @@ namespace PaliTest
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			Assert.IsFalse(t.IsReadOnly);
+		}
+
+		[TestMethod]
+		public void TestEnumerate() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			EnumerateEqual(new[] { "", "a", "abc" }, t);
+
+			t.Add("ae");
+			EnumerateEqual(new[] { "", "a", "ae", "abc" }, t);
+
+			t.Remove("a");
+			EnumerateEqual(new[] { "", "ae", "abc" }, t);
+		}
+
+		[TestMethod]
+		public void TestList() {
+			var t = new Trie<IList<int>, int>(ListConcat<int>.Instance) {
+				new List<int> { 0, 2 },
+				new List<int> { 0, 1 },
+				new List<int> { },
+			};
+
+			Assert.AreEqual(3, t.Count);
+
+			EnumerateEqual(
+				new[] {
+					new int[] { },
+					new[] { 0, 1 },
+					new[] { 0, 2 },
+				},
+				t,
+				Enumerable.SequenceEqual);
+
+			Assert.IsFalse(t.Add(new List<int> { 0, 1 }));
+			Assert.IsTrue(t.Add(new List<int> { 1, 1 }));
+			EnumerateEqual(
+				new[] {
+								new int[] { },
+								new[] { 0, 1 },
+								new[] { 0, 2 },
+								new[] { 1, 1 },
+							},
+				t,
+				Enumerable.SequenceEqual);
+
+			Assert.IsTrue(t.Remove(new List<int> { 0, 1 }));
+			Assert.IsFalse(t.Remove(new List<int> { 0, 1 }));
+			Assert.IsFalse(t.Remove(new List<int> { 2, 0 }));
+			EnumerateEqual(
+				new[] {
+								new int[] { },
+								new[] { 0, 2 },
+								new[] { 1, 1 },
+							},
+				t,
+				Enumerable.SequenceEqual);
+		}
+
+		static void EnumerateEqual<T>(
+				IEnumerable<T> expected,
+				IEnumerable<T> actual, 
+				Func<T, T, bool> comparer = null) {
+			using (var eEn = expected.GetEnumerator())
+			using (var aEn = actual.GetEnumerator()) {
+				while (true) {
+					var eMove = eEn.MoveNext();
+					var aMove = aEn.MoveNext();
+
+					Assert.AreEqual(eMove, aMove, "different lengths");
+					if (!eMove)
+						break;
+
+					if (comparer == null)
+						Assert.AreEqual(eEn.Current, aEn.Current);
+					else
+						Assert.IsTrue(comparer(eEn.Current, aEn.Current));
+				}
+			}
 		}
 	}
 }

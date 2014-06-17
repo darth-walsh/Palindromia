@@ -9,12 +9,13 @@ namespace Palindromia
 	public class Trie<T, Tel> : ISet<T>
 		where T : IEnumerable<Tel>
 	{
-		int count = 0;
-		Node root = new Node();
 		readonly IConcatable<T, Tel> concat;
-
+		Node root;
+		int count = 0;
+		
 		public Trie(IConcatable<T, Tel> concat) {
 			this.concat = concat;
+			this.root = new Node(concat);
 		}
 
 		Node Find(T item) {
@@ -49,7 +50,7 @@ namespace Palindromia
 		}
 
 		public void Clear() {
-			this.root = new Node();
+			this.root = new Node(this.concat);
 			this.count = 0;
 		}
 
@@ -66,7 +67,7 @@ namespace Palindromia
 			while (search.Any()) {
 				var toSearch = search.Dequeue();
 				if (toSearch.Included)
-					yield return default(T); //TODO
+					yield return toSearch.Value;
 				foreach (var kvp in toSearch.Children)
 					search.Enqueue(kvp.Value);
 			}
@@ -126,22 +127,30 @@ namespace Palindromia
 
 		class Node
 		{
-			Dictionary<Tel, Node> children = new Dictionary<Tel, Node>();
-			Node parent;
+			IDictionary<Tel, Node> children = new SortedDictionary<Tel, Node>();
+			readonly Node parent;
+			readonly IConcatable<T, Tel> concat;
+			public T Value { get; private set; }
 
-			public Node()
-				: this(null) {
+			public Node(IConcatable<T, Tel> concat) {
+				this.parent = null;
+				this.concat = concat;
+
+				this.Value = concat.Empty;
 			}
 
-			Node(Node parent) {
+			Node(Tel elem, IConcatable<T, Tel> concat, Node parent) {
 				this.parent = parent;
+				this.concat = concat;
+
+				this.Value = concat.Concat(parent.Value, elem);
 			}
 
 			public Node this[Tel u] {
 				get {
 					Node child;
 					if (!children.TryGetValue(u, out child)) {
-						child = new Node(this);
+						child = new Node(u, this.concat, this);
 						children[u] = child;
 					}
 					return child;

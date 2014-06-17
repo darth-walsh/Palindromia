@@ -10,6 +10,8 @@ namespace Palindromia
 		where T : IEnumerable<Tel>
 	{
 		T Concat(T value, Tel item);
+
+		T Empty { get; }
 	}
 
 	public class StringConcat : IConcatable<string, char>
@@ -21,5 +23,22 @@ namespace Palindromia
 		public string Concat(string value, char item) {
 			return value + item;
 		}
+
+		public string Empty { get { return string.Empty; } }
+	}
+
+	public class ListConcat<T> : IConcatable<IList<T>, T>
+	{
+		ListConcat() { }
+
+		public static readonly ListConcat<T> Instance = new ListConcat<T>();
+
+		public IList<T> Concat(IList<T> value, T item) {
+			var copy = new List<T>(value);
+			copy.Add(item);
+			return copy;
+		}
+
+		public IList<T> Empty { get { return new List<T>(); } }
 	}
 }
