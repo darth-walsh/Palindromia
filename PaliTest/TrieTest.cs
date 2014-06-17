@@ -10,14 +10,14 @@ namespace PaliTest
 	{
 		[TestMethod]
 		public void TestEmpty() {
-			var t = new Trie<string, char>();
+			var t = new Trie<string, char>(StringConcat.Instance);
 
 			Assert.AreEqual(0, t.Count);
 		}
 
 		[TestMethod]
 		public void TestAdd() {
-			var t = new Trie<string, char>();
+			var t = new Trie<string, char>(StringConcat.Instance);
 
 			Assert.IsTrue(t.Add("abc"));
 			Assert.AreEqual(1, t.Count);
@@ -39,7 +39,7 @@ namespace PaliTest
 
 		[TestMethod]
 		public void TestRemove() {
-			var t = new Trie<string, char> { "a", "abc", "" };
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			Assert.IsTrue(t.Remove("a"));
 			Assert.AreEqual(2, t.Count);
@@ -56,7 +56,7 @@ namespace PaliTest
 
 		[TestMethod]
 		public void TestClear() {
-			var t = new Trie<string, char> { "a", "abc", "" };
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			t.Clear();
 			Assert.AreEqual(0, t.Count);
@@ -67,7 +67,7 @@ namespace PaliTest
 
 		[TestMethod]
 		public void TestIncluded() {
-			var t = new Trie<string, char> { "a", "abc", "" };
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			Assert.IsTrue(t.Contains(""));
 			Assert.IsTrue(t.Contains("abc"));
@@ -77,7 +77,7 @@ namespace PaliTest
 
 		[TestMethod]
 		public void TestReadonly() {
-			var t = new Trie<string, char> { "a", "abc", "" };
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			Assert.IsFalse(t.IsReadOnly);
 		}

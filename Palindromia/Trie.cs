@@ -11,6 +11,11 @@ namespace Palindromia
 	{
 		int count = 0;
 		Node<Tel> root = new Node<Tel>();
+		readonly IConcatable<T, Tel> concat;
+
+		public Trie(IConcatable<T, Tel> concat) {
+			this.concat = concat;
+		}
 
 		Node<Tel> Find(T item) {
 			var search = root;
