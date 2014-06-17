@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palindromia", "Palindromia.csproj", "{3C28980A-2FA1-45A9-BBAC-FB3EB94E21FF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Palindromia", "Palindromia\Palindromia.csproj", "{3C28980A-2FA1-45A9-BBAC-FB3EB94E21FF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaliTest", "PaliTest\PaliTest.csproj", "{B22F962D-12B1-4A3F-939E-054CBFD14101}"
 EndProject

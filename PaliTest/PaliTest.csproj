@@ -54,7 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Palindromia.csproj">
+    <ProjectReference Include="..\Palindromia\Palindromia.csproj">
       <Project>{3c28980a-2fa1-45a9-bbac-fb3eb94e21ff}</Project>
       <Name>Palindromia</Name>
     </ProjectReference>
