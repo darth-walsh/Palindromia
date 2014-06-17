@@ -12,20 +12,40 @@ namespace Palindromia
 		int count = 0;
 		Node<Tel> root = new Node<Tel>();
 
+		Node<Tel> Find(T item) {
+			var search = root;
+			foreach (var el in item)
+				search = search[el];
+			return search;
+		}
+
 		public bool Add(T item) {
-			throw new NotImplementedException();
+			var node = Find(item);
+			if (node.Included)
+				return false;
+
+			node.Included = true;
+			++this.count;
+			return true;
 		}
 
 		void ICollection<T>.Add(T item) {
-			throw new NotImplementedException();
+			Add(item);
 		}
 
 		public bool Remove(T item) {
-			throw new NotImplementedException();
+			var node = Find(item);
+			if (!node.Included)
+				return false;
+
+			node.Included = false;
+			--this.count;
+			return true;
 		}
 
 		public void Clear() {
-			throw new NotImplementedException();
+			this.root = new Node<Tel>();
+			this.count = 0;
 		}
 
 		public int Count {
@@ -33,6 +53,21 @@ namespace Palindromia
 		}
 
 		public bool Contains(T item) {
+			return Find(item).Included;
+		}
+
+		public IEnumerator<T> GetEnumerator() {
+			var search = new Queue<Node<Tel>>(new [] { this.root });
+			while (search.Any()) {
+				var toSearch = search.Dequeue();
+				if (toSearch.Included)
+					yield return default(T); //TODO
+				foreach (var kvp in toSearch.Children)
+					search.Enqueue(kvp.Value);
+			}
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
 			throw new NotImplementedException();
 		}
 
@@ -41,15 +76,7 @@ namespace Palindromia
 		}
 
 		public bool IsReadOnly {
-			get { throw new NotImplementedException(); }
-		}
-
-		public IEnumerator<T> GetEnumerator() {
-			throw new NotImplementedException();
-		}
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-			throw new NotImplementedException();
+			get { return false; }
 		}
 
 		public void ExceptWith(IEnumerable<T> other) {
@@ -92,31 +119,31 @@ namespace Palindromia
 			throw new NotImplementedException();
 		}
 
-		class Node<U>
+		class Node<Tel>
 		{
-			Dictionary<U, Node<U>> children = new Dictionary<U, Node<U>>();
-			Node<U> parent;
+			Dictionary<Tel, Node<Tel>> children = new Dictionary<Tel, Node<Tel>>();
+			Node<Tel> parent;
 
 			public Node()
 				: this(null) {
 			}
 
-			Node(Node<U> parent) {
+			Node(Node<Tel> parent) {
 				this.parent = parent;
 			}
 
-			public Node<U> this[U u] {
+			public Node<Tel> this[Tel u] {
 				get {
-					Node<U> child;
+					Node<Tel> child;
 					if (!children.TryGetValue(u, out child)) {
-						child = new Node<U>(this);
+						child = new Node<Tel>(this);
 						children[u] = child;
 					}
 					return child;
 				}
 			}
 
-			public IEnumerable<KeyValuePair<U, Node<U>>> Children {
+			public IEnumerable<KeyValuePair<Tel, Node<Tel>>> Children {
 				get {
 					return this.children;
 				}
