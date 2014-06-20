@@ -94,6 +94,123 @@ namespace PaliTest
 
 			t.Remove("a");
 			EnumerateEqual(new[] { "", "ae", "abc" }, t);
+
+			var expected = new[] { "", "ae", "abc" };
+			int i = 0;
+			foreach (string s in t)
+				Assert.AreEqual(expected[i++], s);
+			Assert.AreEqual(3, i);
+
+			i = 0;
+			var en = (t as System.Collections.IEnumerable).GetEnumerator();
+			while (en.MoveNext())
+				Assert.AreEqual(expected[i++], en.Current);
+			Assert.AreEqual(3, i);
+		}
+
+		[TestMethod]
+		public void TestCopyTo() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			var a = new string[3];
+			t.CopyTo(a, 0);
+			EnumerateEqual(t, a);
+
+			a = new string[4];
+			a[0] = "first";
+			t.CopyTo(a, 1);
+			Assert.AreEqual("first", a[0]);
+			EnumerateEqual(t, a.Skip(1));
+		}
+
+		[TestMethod]
+		public void TestSuperSet() {
+			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
+			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+
+			Assert.IsTrue(ab.IsSupersetOf(a));
+			Assert.IsFalse(a.IsSupersetOf(ab));
+			Assert.IsTrue(a.IsSupersetOf(a));
+		}
+
+		[TestMethod]
+		public void TestProperSuperSet() {
+			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
+			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+
+			Assert.IsTrue(ab.IsProperSupersetOf(a));
+			Assert.IsFalse(a.IsProperSupersetOf(ab));
+			Assert.IsFalse(a.IsProperSupersetOf(a));
+		}
+
+		[TestMethod]
+		public void TestSubSet() {
+			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
+			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+
+			Assert.IsTrue(a.IsSubsetOf(ab));
+			Assert.IsFalse(ab.IsSubsetOf(a));
+			Assert.IsTrue(a.IsSubsetOf(a));
+		}
+
+		[TestMethod]
+		public void TestProperSubSet() {
+			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
+			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+
+			Assert.IsTrue(a.IsProperSubsetOf(ab));
+			Assert.IsFalse(ab.IsProperSubsetOf(a));
+			Assert.IsFalse(a.IsProperSubsetOf(a));
+		}
+
+		[TestMethod]
+		public void TestOverlaps() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			Assert.IsTrue(t.Overlaps(new[] { "a" }));
+			Assert.IsFalse(t.Overlaps(new[] { "b" }));
+		}
+
+		[TestMethod]
+		public void TestSetEquals() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			Assert.IsTrue(t.SetEquals(new[] { "a", "abc", "" }));
+			Assert.IsFalse(t.SetEquals(new[] { "a", "" }));
+			Assert.IsFalse(t.SetEquals(new[] { "a", "ab", "" }));
+			Assert.IsFalse(t.SetEquals(new[] { "a", "abc", "", "c" }));
+		}
+
+		[TestMethod]
+		public void TestExceptwith() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			t.ExceptWith(new[] { "", "a", "bbb" });
+			EnumerateEqual(new[] { "abc" }, t);
+		}
+
+		[TestMethod]
+		public void TestIntersectWith() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			t.IntersectWith(new[] { "", "a", "bbb" });
+			EnumerateEqual(new[] { "", "a" }, t);
+		}
+
+		[TestMethod]
+		public void TestSymmetricExceptWith() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			t.SymmetricExceptWith(new[] { "", "a", "bbb" });
+			EnumerateEqual(new[] { "abc", "bbb" }, t);
+		}
+
+		[TestMethod]
+		public void TestUnionWith() {
+			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+
+			t.UnionWith(new[] { "", "a", "bbb" });
+			EnumerateEqual(new[] { "", "a", "abc", "bbb" }, t);
 		}
 
 		[TestMethod]

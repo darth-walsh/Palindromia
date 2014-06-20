@@ -18,11 +18,29 @@ namespace Palindromia
 			this.root = new Node(concat);
 		}
 
+		public Trie(IConcatable<T, Tel> concat, IEnumerable<T> other) 
+		  : this(concat)
+		{
+			foreach (var el in other)
+				Add(el);
+		}
+
 		Node Find(T item) {
 			var search = root;
 			foreach (var el in item)
 				search = search[el];
 			return search;
+		}
+
+		IEnumerable<Node> GetIncludedNodes() {
+			var search = new Queue<Node>(new[] { this.root });
+			while (search.Any()) {
+				var toSearch = search.Dequeue();
+				if (toSearch.Included)
+					yield return toSearch;
+				foreach (var kvp in toSearch.Children)
+					search.Enqueue(kvp.Value);
+			}
 		}
 
 		public bool Add(T item) {
@@ -63,66 +81,108 @@ namespace Palindromia
 		}
 
 		public IEnumerator<T> GetEnumerator() {
-			var search = new Queue<Node>(new [] { this.root });
-			while (search.Any()) {
-				var toSearch = search.Dequeue();
-				if (toSearch.Included)
-					yield return toSearch.Value;
-				foreach (var kvp in toSearch.Children)
-					search.Enqueue(kvp.Value);
-			}
+			foreach (var node in GetIncludedNodes())
+				yield return node.Value;
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-			throw new NotImplementedException();
+			return GetEnumerator();
 		}
 
 		public void CopyTo(T[] array, int arrayIndex) {
-			throw new NotImplementedException();
+			if (array == null)
+				throw new ArgumentNullException("array");
+			if (arrayIndex < 0)
+				throw new ArgumentOutOfRangeException("arrayIndex", "" + arrayIndex);
+			if(array.Length + arrayIndex < this.Count)
+				throw new ArgumentException("array + arrayIndex");
+
+			foreach (var t in this)
+				array[arrayIndex++] = t;
 		}
 
 		public bool IsReadOnly {
 			get { return false; }
 		}
 
-		public void ExceptWith(IEnumerable<T> other) {
-			throw new NotImplementedException();
-		}
-
-		public void IntersectWith(IEnumerable<T> other) {
-			throw new NotImplementedException();
-		}
-
+		// Could optimize for other is a Trie
 		public bool IsProperSubsetOf(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			return new Trie<T, Tel>(this.concat, other).IsProperSupersetOf(this);
 		}
 
 		public bool IsProperSupersetOf(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			return this.Count > other.Count() && IsSupersetOf(other);
 		}
 
 		public bool IsSubsetOf(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			return new Trie<T, Tel>(this.concat, other).IsSupersetOf(this);
 		}
 
 		public bool IsSupersetOf(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			return other.All(Contains);
 		}
 
 		public bool Overlaps(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			return other.Any(Contains);
 		}
 
 		public bool SetEquals(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			return this.Count == other.Count() && IsSupersetOf(other);
+		}
+
+		public void ExceptWith(IEnumerable<T> other) {
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			foreach (var t in other)
+				Remove(t);
+		}
+
+		public void IntersectWith(IEnumerable<T> other) {
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			var filter = new Trie<T, Tel>(this.concat, other);
+
+			foreach (var node in GetIncludedNodes())
+				if (!filter.Contains(node.Value))
+					node.Included = false;
 		}
 
 		public void SymmetricExceptWith(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			foreach (var t in other) {
+				var node = Find(t);
+				node.Included = !node.Included;
+			}
 		}
 
 		public void UnionWith(IEnumerable<T> other) {
-			throw new NotImplementedException();
+			if (other == null)
+				throw new ArgumentNullException("other");
+
+			foreach (var t in other)
+				Add(t);
 		}
 
 		class Node
