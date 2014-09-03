@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using Palindromia;
 
 namespace PaliTest
 {
-	[TestClass]
+	[TestFixture]
 	public class TrieTest
 	{
-		[TestMethod]
+		[Test]
 		public void TestEmpty() {
 			var t = new Trie<string, char>(StringConcat.Instance);
 
 			Assert.AreEqual(0, t.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestAdd() {
 			var t = new Trie<string, char>(StringConcat.Instance);
 
@@ -38,7 +38,7 @@ namespace PaliTest
 			Assert.AreEqual(4, t.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestRemove() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -55,7 +55,7 @@ namespace PaliTest
 			Assert.AreEqual(0, t.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestClear() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -66,7 +66,7 @@ namespace PaliTest
 			Assert.AreEqual(0, t.Count);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestIncluded() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -76,14 +76,14 @@ namespace PaliTest
 			Assert.IsFalse(t.Contains("c"));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestReadonly() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			Assert.IsFalse(t.IsReadOnly);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestEnumerate() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -108,7 +108,7 @@ namespace PaliTest
 			Assert.AreEqual(3, i);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestCopyTo() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -123,7 +123,7 @@ namespace PaliTest
 			EnumerateEqual(t, a.Skip(1));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestSuperSet() {
 			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
 			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
@@ -133,7 +133,7 @@ namespace PaliTest
 			Assert.IsTrue(a.IsSupersetOf(a));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestProperSuperSet() {
 			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
 			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
@@ -143,7 +143,7 @@ namespace PaliTest
 			Assert.IsFalse(a.IsProperSupersetOf(a));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestSubSet() {
 			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
 			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
@@ -153,7 +153,7 @@ namespace PaliTest
 			Assert.IsTrue(a.IsSubsetOf(a));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestProperSubSet() {
 			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
 			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
@@ -163,7 +163,7 @@ namespace PaliTest
 			Assert.IsFalse(a.IsProperSubsetOf(a));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestOverlaps() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -171,7 +171,7 @@ namespace PaliTest
 			Assert.IsFalse(t.Overlaps(new[] { "b" }));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestSetEquals() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -181,7 +181,7 @@ namespace PaliTest
 			Assert.IsFalse(t.SetEquals(new[] { "a", "abc", "", "c" }));
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestExceptwith() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -189,7 +189,7 @@ namespace PaliTest
 			EnumerateEqual(new[] { "abc" }, t);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestIntersectWith() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -197,7 +197,7 @@ namespace PaliTest
 			EnumerateEqual(new[] { "", "a" }, t);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestSymmetricExceptWith() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -205,7 +205,7 @@ namespace PaliTest
 			EnumerateEqual(new[] { "abc", "bbb" }, t);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestUnionWith() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
@@ -213,7 +213,7 @@ namespace PaliTest
 			EnumerateEqual(new[] { "", "a", "abc", "bbb" }, t);
 		}
 
-		[TestMethod]
+		[Test]
 		public void TestList() {
 			var t = new Trie<IList<int>, int>(ListConcat<int>.Instance) {
 				new List<int> { 0, 2 },
