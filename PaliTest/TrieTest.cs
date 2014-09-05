@@ -87,13 +87,13 @@ namespace PaliTest
 		public void TestEnumerate() {
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
-			EnumerateEqual(new[] { "", "a", "abc" }, t);
+			Assert.AreEqual(new[] { "", "a", "abc" }, t);
 
 			t.Add("ae");
-			EnumerateEqual(new[] { "", "a", "ae", "abc" }, t);
+			Assert.AreEqual(new[] { "", "a", "ae", "abc" }, t);
 
 			t.Remove("a");
-			EnumerateEqual(new[] { "", "ae", "abc" }, t);
+			Assert.AreEqual(new[] { "", "ae", "abc" }, t);
 
 			var expected = new[] { "", "ae", "abc" };
 			int i = 0;
@@ -114,13 +114,13 @@ namespace PaliTest
 
 			var a = new string[3];
 			t.CopyTo(a, 0);
-			EnumerateEqual(t, a);
+			Assert.AreEqual(t, a);
 
 			a = new string[4];
 			a[0] = "first";
 			t.CopyTo(a, 1);
 			Assert.AreEqual("first", a[0]);
-			EnumerateEqual(t, a.Skip(1));
+			Assert.AreEqual(t, a.Skip(1));
 		}
 
 		[Test]
@@ -186,7 +186,7 @@ namespace PaliTest
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			t.ExceptWith(new[] { "", "a", "bbb" });
-			EnumerateEqual(new[] { "abc" }, t);
+			Assert.AreEqual(new[] { "abc" }, t);
 		}
 
 		[Test]
@@ -194,7 +194,7 @@ namespace PaliTest
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			t.IntersectWith(new[] { "", "a", "bbb" });
-			EnumerateEqual(new[] { "", "a" }, t);
+			Assert.AreEqual(new[] { "", "a" }, t);
 		}
 
 		[Test]
@@ -202,7 +202,7 @@ namespace PaliTest
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			t.SymmetricExceptWith(new[] { "", "a", "bbb" });
-			EnumerateEqual(new[] { "abc", "bbb" }, t);
+			Assert.AreEqual(new[] { "abc", "bbb" }, t);
 		}
 
 		[Test]
@@ -210,7 +210,7 @@ namespace PaliTest
 			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
 
 			t.UnionWith(new[] { "", "a", "bbb" });
-			EnumerateEqual(new[] { "", "a", "abc", "bbb" }, t);
+			Assert.AreEqual(new[] { "", "a", "abc", "bbb" }, t);
 		}
 
 		[Test]
@@ -223,60 +223,35 @@ namespace PaliTest
 
 			Assert.AreEqual(3, t.Count);
 
-			EnumerateEqual(
+			Assert.AreEqual(
 				new[] {
 					new int[] { },
 					new[] { 0, 1 },
 					new[] { 0, 2 },
 				},
-				t,
-				Enumerable.SequenceEqual);
+				t);
 
 			Assert.IsFalse(t.Add(new List<int> { 0, 1 }));
 			Assert.IsTrue(t.Add(new List<int> { 1, 1 }));
-			EnumerateEqual(
+			Assert.AreEqual(
 				new[] {
 								new int[] { },
 								new[] { 0, 1 },
 								new[] { 0, 2 },
 								new[] { 1, 1 },
 							},
-				t,
-				Enumerable.SequenceEqual);
+				t);
 
 			Assert.IsTrue(t.Remove(new List<int> { 0, 1 }));
 			Assert.IsFalse(t.Remove(new List<int> { 0, 1 }));
 			Assert.IsFalse(t.Remove(new List<int> { 2, 0 }));
-			EnumerateEqual(
+			Assert.AreEqual(
 				new[] {
 								new int[] { },
 								new[] { 0, 2 },
 								new[] { 1, 1 },
 							},
-				t,
-				Enumerable.SequenceEqual);
-		}
-
-		static void EnumerateEqual<T>(
-				IEnumerable<T> expected,
-				IEnumerable<T> actual, 
-				Func<T, T, bool> comparer = null) {
-			using (var eEn = expected.GetEnumerator())
-			using (var aEn = actual.GetEnumerator()) {
-				while (true) {
-					var eMove = eEn.MoveNext();
-					var aMove = aEn.MoveNext();
-
-					Assert.AreEqual(eMove, aMove, "different lengths");
-					if (!eMove)
-						break;
-
-					if (comparer == null)
-						Assert.AreEqual(eEn.Current, aEn.Current);
-					else
-						Assert.IsTrue(comparer(eEn.Current, aEn.Current));
-				}
-			}
+				t);
 		}
 	}
 }
