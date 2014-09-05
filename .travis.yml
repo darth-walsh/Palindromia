@@ -1,8 +1,8 @@
 language: c
 
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y monodevelop nunit-console
+  - sudo apt-get update -qq > /dev/null
+  - sudo apt-get install -y -qq mono-devel mono-gmcs nunit-console > /dev/null #Need old packages for old Ubuntu :\
 
 script:
  - xbuild
