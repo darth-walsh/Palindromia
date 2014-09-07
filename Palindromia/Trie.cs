@@ -12,8 +12,15 @@ namespace Palindromia
 		readonly IConcatable<T, Tel> concat;
 		Node root;
 		int count = 0;
-		
-		public Trie(IConcatable<T, Tel> concat) {
+
+		Trie(IConcatable<T, Tel> concat, Node root) {
+			this.concat = concat;
+			this.root = root;
+		}
+
+		public Trie(IConcatable<T, Tel> concat)
+			: this(concat, new Node(concat))
+		{
 			this.concat = concat;
 			this.root = new Node(concat);
 		}
@@ -25,11 +32,15 @@ namespace Palindromia
 				Add(el);
 		}
 
-		Node Find(T item) {
+		Node Find(IEnumerable<Tel> item) {
+			return FindAll(item).Last();
+		}
+
+		IEnumerable<Node> FindAll(IEnumerable<Tel> item) {
 			var search = root;
+			yield return search;
 			foreach (var el in item)
-				search = search[el];
-			return search;
+				yield return search = search[el];
 		}
 
 		IEnumerable<Node> GetIncludedNodes() {
@@ -185,6 +196,18 @@ namespace Palindromia
 				Add(t);
 		}
 
+		// Elements that are the start of t
+		// i.e. { "", "a", "ab" }.Subs("a") = { "", "a" }
+		public IEnumerable<T> Subs(IEnumerable<Tel> item) {
+			return FindAll(item).Where(n => n.Included).Select(n => n.Value);
+		}
+
+		// Elements that t is the start of 
+		// i.e. { "", "a", "ab" }.Supers("a") = { "a", "ab" }
+		public IEnumerable<T> Supers(T item) {
+			return new Trie<T, Tel>(this.concat, Find(item));
+		}
+
 		class Node
 		{
 			IDictionary<Tel, Node> children = new SortedDictionary<Tel, Node>();
@@ -223,7 +246,15 @@ namespace Palindromia
 				}
 			}
 
-			public bool Included { get; set; } // Deleting children on Included=false not implemented
+			public bool Included { get; set; } // Pruning useless children on Included=false not implemented
+		}
+	}
+
+	public class StringTrie : Trie<string, char>
+	{
+		public StringTrie()
+			: base(StringConcat.Instance) {
+
 		}
 	}
 }

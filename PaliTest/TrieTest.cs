@@ -11,14 +11,14 @@ namespace PaliTest
 	{
 		[Test]
 		public void TestEmpty() {
-			var t = new Trie<string, char>(StringConcat.Instance);
+			var t = new StringTrie();
 
 			Assert.AreEqual(0, t.Count);
 		}
 
 		[Test]
 		public void TestAdd() {
-			var t = new Trie<string, char>(StringConcat.Instance);
+			var t = new StringTrie();
 
 			Assert.IsTrue(t.Add("abc"));
 			Assert.AreEqual(1, t.Count);
@@ -40,7 +40,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestRemove() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			Assert.IsTrue(t.Remove("a"));
 			Assert.AreEqual(2, t.Count);
@@ -57,7 +57,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestClear() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			t.Clear();
 			Assert.AreEqual(0, t.Count);
@@ -68,7 +68,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestIncluded() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			Assert.IsTrue(t.Contains(""));
 			Assert.IsTrue(t.Contains("abc"));
@@ -78,14 +78,14 @@ namespace PaliTest
 
 		[Test]
 		public void TestReadonly() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			Assert.IsFalse(t.IsReadOnly);
 		}
 
 		[Test]
 		public void TestEnumerate() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			Assert.AreEqual(new[] { "", "a", "abc" }, t);
 
@@ -110,7 +110,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestCopyTo() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			var a = new string[3];
 			t.CopyTo(a, 0);
@@ -125,8 +125,8 @@ namespace PaliTest
 
 		[Test]
 		public void TestSuperSet() {
-			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
-			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+			var a = new StringTrie { "a" };
+			var ab = new StringTrie { "a", "b" };
 
 			Assert.IsTrue(ab.IsSupersetOf(a));
 			Assert.IsFalse(a.IsSupersetOf(ab));
@@ -135,8 +135,8 @@ namespace PaliTest
 
 		[Test]
 		public void TestProperSuperSet() {
-			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
-			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+			var a = new StringTrie { "a" };
+			var ab = new StringTrie { "a", "b" };
 
 			Assert.IsTrue(ab.IsProperSupersetOf(a));
 			Assert.IsFalse(a.IsProperSupersetOf(ab));
@@ -145,8 +145,8 @@ namespace PaliTest
 
 		[Test]
 		public void TestSubSet() {
-			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
-			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+			var a = new StringTrie { "a" };
+			var ab = new StringTrie { "a", "b" };
 
 			Assert.IsTrue(a.IsSubsetOf(ab));
 			Assert.IsFalse(ab.IsSubsetOf(a));
@@ -155,8 +155,8 @@ namespace PaliTest
 
 		[Test]
 		public void TestProperSubSet() {
-			var a = new Trie<string, char>(StringConcat.Instance) { "a" };
-			var ab = new Trie<string, char>(StringConcat.Instance) { "a", "b" };
+			var a = new StringTrie { "a" };
+			var ab = new StringTrie { "a", "b" };
 
 			Assert.IsTrue(a.IsProperSubsetOf(ab));
 			Assert.IsFalse(ab.IsProperSubsetOf(a));
@@ -165,7 +165,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestOverlaps() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			Assert.IsTrue(t.Overlaps(new[] { "a" }));
 			Assert.IsFalse(t.Overlaps(new[] { "b" }));
@@ -173,7 +173,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestSetEquals() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			Assert.IsTrue(t.SetEquals(new[] { "a", "abc", "" }));
 			Assert.IsFalse(t.SetEquals(new[] { "a", "" }));
@@ -183,7 +183,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestExceptwith() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			t.ExceptWith(new[] { "", "a", "bbb" });
 			Assert.AreEqual(new[] { "abc" }, t);
@@ -191,7 +191,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestIntersectWith() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			t.IntersectWith(new[] { "", "a", "bbb" });
 			Assert.AreEqual(new[] { "", "a" }, t);
@@ -199,7 +199,7 @@ namespace PaliTest
 
 		[Test]
 		public void TestSymmetricExceptWith() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			t.SymmetricExceptWith(new[] { "", "a", "bbb" });
 			Assert.AreEqual(new[] { "abc", "bbb" }, t);
@@ -207,10 +207,38 @@ namespace PaliTest
 
 		[Test]
 		public void TestUnionWith() {
-			var t = new Trie<string, char>(StringConcat.Instance) { "a", "abc", "" };
+			var t = new StringTrie { "a", "abc", "" };
 
 			t.UnionWith(new[] { "", "a", "bbb" });
 			Assert.AreEqual(new[] { "", "a", "abc", "bbb" }, t);
+		}
+
+		[Test]
+		public void TestSubs() {
+			var t = new StringTrie { "a", "abc", "" };
+
+			Assert.AreEqual(new[] { "" },             t.Subs(""));
+			Assert.AreEqual(new[] { "", "a", },       t.Subs("a"));
+			Assert.AreEqual(new[] { "", "a" },        t.Subs("ab"));
+			Assert.AreEqual(new[] { "", "a", "abc" }, t.Subs("abc"));
+			Assert.AreEqual(new[] { "", "a", "abc" }, t.Subs("abcd"));
+
+			Assert.AreEqual(new[] { "", },            t.Subs("b"));
+
+			Assert.AreEqual(new string[] { }, new StringTrie { "a", "abc" }.Subs("b"));
+		}
+
+		[Test]
+		public void TestSupers() {
+			var t = new StringTrie { "a", "abc", "" };
+
+			Assert.AreEqual(new[] { "", "a", "abc" }, t.Supers(""));
+			Assert.AreEqual(new[] { "a", "abc" },     t.Supers("a"));
+			Assert.AreEqual(new[] { "abc" },          t.Supers("ab"));
+			Assert.AreEqual(new[] { "abc" },          t.Supers("abc"));
+			Assert.AreEqual(new string[] { },         t.Supers("abcd"));
+			
+			Assert.AreEqual(new string[] { },         t.Supers("b"));
 		}
 
 		[Test]
