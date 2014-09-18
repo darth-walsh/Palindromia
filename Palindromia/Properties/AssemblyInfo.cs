@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Palindromia")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Palindrome finding library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Palindromia")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCompany("Carl Walsh")]
+[assembly: AssemblyProduct("Palindromia https://github.com/darth-walsh/Palindromia")]
+[assembly: AssemblyCopyright("Copyright © 2014 - License: MIT")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
