@@ -1,7 +1,7 @@
 Palindromia
 ===========
 
-A palindrome finding web server
+A palindrome finding library
 
 Build and Test
 --------------
